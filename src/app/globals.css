@@ -2,17 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 51, 51, 51; /* Dark Charcoal */
-  --background-start-rgb: 245, 245, 245; /* Light Gray */
-  --background-end-rgb: 255, 255, 255; /* White */
-  --secondary-accent-rgb: 0, 0, 0; /* Dark Color for Hover */
-}
-
-/* Example Usage in Tailwind */
 body {
-  
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.6;
+}
+
+/* Add this CSS to your global styles or a CSS module */
+.card-container {
+  transform-style: preserve-3d;
+}
+
+.card-container:hover {
+  transform: scale(1.1); /* Zoom in effect */
+  z-index: 10;
 }
 

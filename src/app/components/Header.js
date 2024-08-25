@@ -1,22 +1,23 @@
 import Link from 'next/link';
+import './Header.css'; // Ensure your CSS file is imported here
 
 export default function Header() {
     return (
-        <header className="bg-white text-gray-800 flex flex-wrap md:flex-nowrap justify-between items-center p-4 shadow-sm border-b">
-            <div className="logo font-bold text-2xl mb-4 md:mb-0">
+        <header className="bg-white text-gray-800 flex flex-wrap md:flex-nowrap justify-between items-center py-2 px-4 shadow-sm border-b">
+            <div className="logo font-bold text-xl md:text-2xl mb-2 md:mb-0">
                 <Link href="/">PramanAI</Link>
             </div>
-            <nav className="flex flex-wrap gap-4 md:gap-6 mb-4 md:mb-0">
-                <Link href="/" className="text-gray-800 hover:underline hover:decoration-2 transition-all duration-300">
+            <nav className="flex flex-wrap gap-4 md:gap-6 mb-2 md:mb-0 text-md">
+                <Link href="/" className="nav-item ">
                     Home
                 </Link>
-                <Link href="/about" className="text-gray-800 hover:underline hover:decoration-2 transition-all duration-300">
+                <Link href="/about" className="nav-item ">
                     About
                 </Link>
-                <Link href="/services" className="text-gray-800 hover:underline hover:decoration-2 transition-all duration-300">
+                <Link href="/services" className="nav-item ">
                     Services
                 </Link>
-                <Link href="/contact" className="text-gray-800 hover:underline hover:decoration-2 transition-all duration-300">
+                <Link href="/contact" className="nav-item ">
                     Contact
                 </Link>
             </nav>
@@ -25,17 +26,14 @@ export default function Header() {
                 <input
                     type="text"
                     placeholder="Search..."
-                    className="p-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black transition-all duration-300"
+                    className="p-1.5 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black transition-all duration-300"
                 />
             </div>
-
-
-
 
             <div className="user-account">
                 <Link
                     href="/login"
-                    className="mt-1 relative inline-block text-gray-800 px-4 py-2 border border-black overflow-hidden group"
+                    className="relative inline-block text-gray-800 px-4 py-1.5 border border-black overflow-hidden group"
                 >
                     <span className="relative z-10">Login</span>
                     {/* Left border */}
@@ -48,8 +46,6 @@ export default function Header() {
                     <span className="absolute inset-0 border-l-2 border-black transform translate-y-full transition-transform duration-300 group-hover:-translate-y-0"></span>
                 </Link>
             </div>
-
-
         </header>
     );
 }

@@ -1,0 +1,19 @@
+/* Add this to your CSS file or in a <style> tag in your component */
+.nav-item {
+    position: relative;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px; /* Adjust height as needed */
+    background-color: black; /* Adjust color as needed */
+    transition: width 0.3s ease; /* Smooth transition for the underline effect */
+}
+
+.nav-item:hover::after {
+    width: 100%;
+}
