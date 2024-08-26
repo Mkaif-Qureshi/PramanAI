@@ -44,8 +44,8 @@ export default function HeroSection() {
                     slidesPerView={1}
                     pagination={{ clickable: true }}
                     navigation={{
-                        prevEl: '.swiper-button-prev',
-                        nextEl: '.swiper-button-next',
+                        prevEl: '.prev',
+                        nextEl: '.next',
                     }}
                     loop={true}
                     className="max-w-md"
@@ -64,23 +64,24 @@ export default function HeroSection() {
                 </Swiper>
                 {/* Navigation Buttons */}
                 <div className="flex justify-center mt-4 w-full">
-                    <button className="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-200 focus:outline-none group ">
+                    <button className="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-200 focus:outline-none group hover:border-black">
                         <Image
                             loading="lazy"
                             src="/icons/right-arrow.svg"
                             width={20}
                             height={20}
                             alt="Previous Slide"
-                            className="rotate-180"
+                            className="prev rotate-180 "
                         />
                     </button>
-                    <button className="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-200 focus:outline-none group mx-4">
+                    <button className="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-200 focus:outline-none group mx-4 hover:border-black">
                         <Image
                             loading="lazy"
                             src="/icons/right-arrow.svg"
                             width={20}
                             height={20}
                             alt="Next Slide"
+                            className="next"
                         />
                     </button>
                 </div>

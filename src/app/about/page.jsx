@@ -8,7 +8,6 @@ export default function AboutPage() {
             {/* Contact Us Section */}
             <ContactUs />
 
-
             <section className="mb-16 py-6 px-6 ">
                 <h1 className="text-4xl font-bold mb-6 text-gray-900 text-left">About PramanAI</h1>
                 <p className="text-lg mb-4 text-gray-700 text-left leading-relaxed">
@@ -21,7 +20,7 @@ export default function AboutPage() {
 
 
             {/* Our Team Section */}
-            {/* <section className="mb-16 mx-auto">
+            <section className="mb-16 mx-auto">
                 <h2 className="text-3xl font-bold mb-6 text-gray-900 text-left">Meet the Team</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {[
@@ -37,7 +36,7 @@ export default function AboutPage() {
                         />
                     ))}
                 </div>
-            </section> */}
+            </section>
 
 
         </div>

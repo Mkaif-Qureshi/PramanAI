@@ -17,3 +17,21 @@
 .nav-item:hover::after {
     width: 100%;
 }
+
+/* Header.css */
+header {
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.scrolled-down {
+    background-color: #f8f9fa; /* Lighter background when scrolled */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add shadow when scrolled */
+    transform: translateY(-60px); /* Move header up when scrolled down */
+}
+
+.scrolled-up {
+    background-color: #ffffff; /* Default background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add shadow when scrolled */
+    transform: translateY(0); /* Move header back into view */
+}
+

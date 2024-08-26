@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
+import "./styles.css"
 
 const HowPramanAIWorks = () => {
     return (
@@ -14,24 +15,25 @@ const HowPramanAIWorks = () => {
             <div className="w-full flex justify-between items-center px-4 lg:px-8">
                 <h2 className="font-semibold text-2xl">How PramanAI Works</h2>
                 <div className="relative flex text-2xl gap-4">
-                    <button className="relative flex items-center justify-center w-8 h-8 rounded-full  border-2 border-zinc-200 focus:outline-none group">
+                    <button className=" relative flex items-center justify-center w-8 h-8 rounded-full  border-2 border-zinc-200 focus:outline-none group">
                         <Image
                             loading="lazy"
                             src="/icons/right-arrow.svg"
                             width={20}
                             height={20}
                             alt="Previous Slide"
-                            className="rotate-180"
+                            className="back rotate-180"
                         />
                         <span className="absolute inset-0 border-2 border-transparent group-hover:border-black transition-transform transform -rotate-45 scale-100 group-hover:rotate-45 group-hover:scale-110 rounded-full"></span>
                     </button>
-                    <button className="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-200 focus:outline-none group">
+                    <button className=" relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-zinc-200 focus:outline-none group">
                         <Image
                             loading="lazy"
                             src="/icons/right-arrow.svg"
                             width={20}
                             height={20}
                             alt="Next Slide"
+                            className="right"
                         />
                         <span className="absolute inset-0 border-2 border-transparent group-hover:border-black transition-transform transform -rotate-45 scale-100 group-hover:rotate-45 group-hover:scale-110 rounded-full"></span>
                     </button>
@@ -42,10 +44,24 @@ const HowPramanAIWorks = () => {
                 effect="coverflow"
                 slidesPerView={1}
                 navigation={{
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
+                    nextEl: ".right",
+                    prevEl: ".back",
                 }}
+                noSwiping={false}
+                allowSlidePrev={true}
+                allowSlideNext={true}
                 loop={true}
+                mousewheel={{
+                    forceToAxis: true,
+                    invert: false,
+                }}
+                freeMode={{
+                    enabled: false,
+                    sticky: true,
+                    momentum: true,
+                    momentumRatio: 0.5,
+                    momentumBounceRatio: 0.5,
+                }}
                 pagination={{ clickable: true }}
                 coverflowEffect={{
                     rotate: 0,
