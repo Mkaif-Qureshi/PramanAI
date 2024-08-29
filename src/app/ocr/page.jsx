@@ -1,10 +1,12 @@
-"use client";
+"use client"
 import { useState } from 'react';
 import Image from 'next/image';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import jsPDF from 'jspdf';
+// import 'jspdf-autotable';
 
 const OcrPage = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -55,11 +57,61 @@ const OcrPage = () => {
         }
     };
 
-    const handleSave = () => {
-        toast.success('Text saved successfully!', {
+
+
+    // const handleSaveAsPdf = () => {
+    //     const doc = new jsPDF();
+
+    //     // Extract the text from the ReactQuill editor
+    //     const extractedText = document.querySelector('.ql-editor').innerHTML;
+
+    //     // Split the text by newlines and paragraphs
+    //     const lines = extractedText.split(/<p>|<\/p>/).filter(line => line.trim() !== '');
+
+    //     // Set up basic formatting for the PDF
+    //     doc.setFontSize(12);
+
+    //     // Add the text line by line to the PDF
+    //     lines.forEach((line, index) => {
+    //         // Convert HTML to plain text (basic)
+    //         const cleanLine = line.replace(/<\/?[^>]+(>|$)/g, ""); // Strip HTML tags
+    //         doc.text(10, 10 + (index * 10), cleanLine);
+    //     });
+
+    //     // Save the PDF
+    //     doc.save(`${fileName.split('.')[0]}_extracted.pdf`);
+    //     toast.success('PDF downloaded successfully!', {
+    //         position: "bottom-right"
+    //     });
+    // };
+
+    const handleSaveAsText = () => {
+        if (!ocrText.trim()) {
+            toast.error('No text to save!', { position: "bottom-right" });
+            return;
+        }
+
+        // Create a blob with the text content
+        const blob = new Blob([ocrText], { type: 'text/plain;charset=utf-8' });
+
+        // Create a link element to trigger the download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${fileName.split('.')[0]}_extracted.txt`;
+
+        // Append the link to the body, trigger the download, and then remove the link
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        toast.success('Text downloaded successfully!', {
             position: "bottom-right"
         });
     };
+
+
+
+
 
     const handleReset = () => {
         if (window.confirm('Do you want to clear the text?')) {
@@ -80,7 +132,6 @@ const OcrPage = () => {
                 <section className="mb-8">
                     <h1 className="text-xl sm:text-2xl font-bold mb-4">OCR Processing</h1>
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                        {/* Attach file box */}
                         <label className="flex items-center border p-2 w-full sm:w-1/6 border-gray-300 cursor-pointer text-center hover:border-black transition-colors duration-300 flex-shrink-0 py-[0.6rem]">
                             <input
                                 type="file"
@@ -99,7 +150,6 @@ const OcrPage = () => {
                             </div>
                         </label>
 
-                        {/* Language dropdown */}
                         <select
                             value={selectedLang}
                             onChange={handleLangChange}
@@ -107,22 +157,18 @@ const OcrPage = () => {
                         >
                             <option value="eng">English</option>
                             <option value="hin">Hindi</option>
-                            <option value="ben">Bengali</option>
                             <option value="mar">Marathi</option>
                             <option value="tam">Tamil</option>
                             <option value="tel">Telugu</option>
                             <option value="kan">Kannada</option>
-                            <option value="guj">Gujarati</option>
                             <option value="mal">Malayalam</option>
+                            <option value="ben">Bengali</option>
+                            <option value="guj">Gujarati</option>
+                            <option value="pan">Punjabi</option>
                             <option value="ori">Odia</option>
-                            <option value="pun">Punjabi</option>
-                            <option value="asm">Assamese</option>
-                            <option value="san">Sanskrit</option>
-                            <option value="syl">Sylheti</option>
-                            <option value="rom">Romanized Hindi</option>
+                            <option value="urd">Urdu</option>
                         </select>
 
-                        {/* Extract Text button */}
                         <button
                             onClick={handleExtractText}
                             className="w-40 bg-black text-white font-semibold py-2 mt-4 transition-all duration-300 hover:bg-gray-700"
@@ -131,25 +177,22 @@ const OcrPage = () => {
                             Extract Text
                         </button>
 
-                        {/* Processing status */}
                         {isProcessing && (
                             <div className="text-gray-500">Processing...</div>
                         )}
 
-                        {/* Error message */}
                         {error && (
                             <div className="text-red-600">{error}</div>
                         )}
                     </div>
 
-                    {/* Display selected file name */}
                     {fileName && (
                         <div className="text-gray-700 my-3">
                             <strong>Selected File:</strong> {fileName}
                         </div>
                     )}
 
-                    <div className="bg-white p-4 shadow-md mt-8 border border-gray-300">
+                    <div className="bg-white p-4 shadow-md mt-8 border border-gray-300" id="pdf-content">
                         <h2 className="text-lg font-semibold mb-4">Extracted Text</h2>
                         <hr className="border-gray-300" />
                         <ReactQuill
@@ -162,14 +205,14 @@ const OcrPage = () => {
                         {ocrText && (
                             <div className="flex justify-end mt-4 space-x-4">
                                 <button
-                                    onClick={handleSave}
-                                    className="border-2 border-blue-600 hover:bg-blue-500 hover:text-white text-black py-1 px-4"
+                                    onClick={handleSaveAsText}
+                                    className="border-2 border-black hover:bg-blue-500 hover:text-white text-black py-1 px-4"
                                 >
                                     Save
                                 </button>
                                 <button
                                     onClick={handleReset}
-                                    className="border-2 border-red-600 hover:bg-red-500 hover:text-white text-black py-1 px-4"
+                                    className="border-2 border-black hover:bg-red-500 hover:text-white text-black py-1 px-4"
                                 >
                                     Reset
                                 </button>

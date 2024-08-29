@@ -41,14 +41,14 @@ export default function Header() {
                 <Link href="/" className="nav-item">
                     Home
                 </Link>
-                <Link href="/about" className="nav-item">
-                    About
+                <Link href="/ocr" className="nav-item">
+                    OCR
                 </Link>
                 <Link href="/services" className="nav-item">
                     Services
                 </Link>
-                <Link href="/contact" className="nav-item">
-                    Contact
+                <Link href="/about" className="nav-item">
+                    About
                 </Link>
             </nav>
 

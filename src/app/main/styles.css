@@ -1,0 +1,42 @@
+/* Style for the tooltip container */
+.entity-item {
+    position: relative;
+    display: inline-block;
+}
+
+/* Hidden tooltip by default */
+.tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the text */
+    left: 50%;
+    margin-left: -60px; /* Center the tooltip */
+    transition: opacity 0.3s;
+    width: 120px; /* Adjust width as needed */
+    white-space: nowrap;
+}
+
+/* Tooltip arrow */
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+/* Show tooltip on hover */
+.entity-item:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
