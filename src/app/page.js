@@ -34,22 +34,24 @@ export default function Home() {
             <HowItWorks />
 
             {/* Benefits Section */}
-            <section className="benefits py-20">
-                <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Benefits of Our Solution</h2>
-                <div className="grid md:grid-cols-3 gap-8 px-6 max-w-5xl mx-auto">
+            <section className="benefits py-20 bg-gray-100">
+                <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Benefits of Using ParamAI</h2>
+                <div className="grid md:grid-cols-3 gap-8 px-6 max-w-6xl mx-auto">
                     {[
-                        { src: '/icons/benefit1.svg', alt: 'Benefit 1', title: 'Increased Efficiency', description: 'Automate data extraction and analysis to save time and reduce errors.' },
-                        { src: '/icons/benefit2.svg', alt: 'Benefit 2', title: 'Improved Accuracy', description: 'AI-driven analysis ensures high accuracy in data extraction and insights.' },
-                        { src: '/icons/benefit3.svg', alt: 'Benefit 3', title: 'Enhanced Decision Making', description: 'Gain deeper insights and make informed decisions with our solution.' }
+                        { src: '/images/streamline.jpg', alt: 'Streamlined Workflows', title: 'Streamlined Workflows', description: 'Automate repetitive tasks and optimize workflows to enhance productivity and reduce manual efforts.' },
+                        { src: '/images/translator.jpg', alt: 'Superior Translation Accuracy', title: 'Superior Translation Accuracy', description: 'Achieve higher translation accuracy with AI models specially designed for Indian languages.' },
+                        { src: '/images/data.jpg', alt: 'Data-Driven Insights', title: 'Data-Driven Insights', description: 'Extract actionable insights from complex data to support informed decision-making and strategic planning.' }
                     ].map((benefit, index) => (
-                        <div key={index} className="benefit bg-white p-6 shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
-                            <img src={benefit.src} alt={benefit.alt} className="mx-auto mb-4 w-16 h-16" />
+                        <div key={index} className="benefit bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+                            <img src={benefit.src} alt={benefit.alt} className="mx-auto mb-4 w-150 " />
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                            <p className="text-gray-700">{benefit.description}</p>
+                            <p className="text-gray-600">{benefit.description}</p>
                         </div>
                     ))}
                 </div>
             </section>
+
+
 
             {/* Call to Action Section */}
             <section className="cta py-20 text-black max-w-screen-xl mx-auto text-center">

@@ -10,9 +10,9 @@ import 'swiper/css/pagination';
 export default function HeroSection() {
     const images = [
         '/images/hero-1.png',
-        '/images/hero-2.jpeg',
-        '/images/hero-3.jpeg',
-        '/images/hero-4.jpeg'
+        '/images/hero-4.webp',
+        '/images/hero-3.webp',
+        '/images/hero-2.webp',
     ];
 
     return (

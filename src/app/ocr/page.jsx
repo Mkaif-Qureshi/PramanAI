@@ -1,123 +1,88 @@
-"use client"
-import { useState } from 'react';
-import Image from 'next/image';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-// import jsPDF from 'jspdf';
-// import 'jspdf-autotable';
+"use client";
+import { useState } from "react";
+import Image from "next/image";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { PulseLoader } from "react-spinners"; // Add react-spinners for cool loading animations
 
 const OcrPage = () => {
     const [selectedFile, setSelectedFile] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [ocrText, setOcrText] = useState('');
+    const [fileName, setFileName] = useState("");
+    const [ocrText, setOcrText] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
-    const [error, setError] = useState('');
-    const [selectedLang, setSelectedLang] = useState('eng');
+    const [error, setError] = useState("");
+    const [selectedLang, setSelectedLang] = useState("eng");
+    const [isUploading, setIsUploading] = useState(false); // State to manage file upload status
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (!file) {
-            setError('Please select a file.');
+            setError("Please select a file.");
             return;
         }
         setSelectedFile(file);
         setFileName(file.name);
-        setError('');
+        setError("");
+        setIsUploading(true); // Start upload animation
+        setTimeout(() => setIsUploading(false), 1000); // Simulate upload delay
     };
 
     const handleExtractText = async () => {
         if (!selectedFile) {
-            setError('Please select a file.');
+            setError("Please select a file.");
             return;
         }
         setIsProcessing(true);
-        setError('');
+        setError("");
 
         const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('lang', selectedLang);
+        formData.append("file", selectedFile);
+        formData.append("lang", selectedLang);
 
         try {
-            const response = await fetch('http://localhost:5000/api/ocr', {
-                method: 'POST',
-                body: formData
+            const response = await fetch("http://localhost:5000/api/ocr", {
+                method: "POST",
+                body: formData,
             });
             const data = await response.json();
             if (response.ok) {
                 setOcrText(data.text);
             } else {
-                setError(data.error || 'An error occurred.');
+                setError(data.error || "An error occurred.");
             }
         } catch (err) {
-            setError('Failed to process the file.');
+            setError("Failed to process the file.");
         } finally {
             setIsProcessing(false);
         }
     };
 
-
-
-    // const handleSaveAsPdf = () => {
-    //     const doc = new jsPDF();
-
-    //     // Extract the text from the ReactQuill editor
-    //     const extractedText = document.querySelector('.ql-editor').innerHTML;
-
-    //     // Split the text by newlines and paragraphs
-    //     const lines = extractedText.split(/<p>|<\/p>/).filter(line => line.trim() !== '');
-
-    //     // Set up basic formatting for the PDF
-    //     doc.setFontSize(12);
-
-    //     // Add the text line by line to the PDF
-    //     lines.forEach((line, index) => {
-    //         // Convert HTML to plain text (basic)
-    //         const cleanLine = line.replace(/<\/?[^>]+(>|$)/g, ""); // Strip HTML tags
-    //         doc.text(10, 10 + (index * 10), cleanLine);
-    //     });
-
-    //     // Save the PDF
-    //     doc.save(`${fileName.split('.')[0]}_extracted.pdf`);
-    //     toast.success('PDF downloaded successfully!', {
-    //         position: "bottom-right"
-    //     });
-    // };
-
     const handleSaveAsText = () => {
         if (!ocrText.trim()) {
-            toast.error('No text to save!', { position: "bottom-right" });
+            toast.error("No text to save!", { position: "bottom-right" });
             return;
         }
 
-        // Create a blob with the text content
-        const blob = new Blob([ocrText], { type: 'text/plain;charset=utf-8' });
-
-        // Create a link element to trigger the download
-        const link = document.createElement('a');
+        const blob = new Blob([ocrText], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `${fileName.split('.')[0]}_extracted.txt`;
-
-        // Append the link to the body, trigger the download, and then remove the link
+        link.download = `${fileName.split(".")[0]}_extracted.txt`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-        toast.success('Text downloaded successfully!', {
-            position: "bottom-right"
+        toast.success("Text downloaded successfully!", {
+            position: "bottom-right",
         });
     };
 
-
-
-
-
     const handleReset = () => {
-        if (window.confirm('Do you want to clear the text?')) {
-            setOcrText('');
-            toast.info('Text cleared.', {
-                position: "bottom-right"
+        if (window.confirm("Do you want to clear the text?")) {
+            setOcrText("");
+            toast.info("Text cleared.", {
+                position: "bottom-right",
             });
         }
     };
@@ -139,16 +104,27 @@ const OcrPage = () => {
                                 onChange={handleFileChange}
                                 className="hidden"
                             />
-                            <div className='flex items-center space-x-2 justify-center'>
+                            <div className="flex items-center space-x-2 justify-center">
                                 <Image
                                     src="/icons/attach.svg"
                                     alt="Attach File"
                                     width={22}
                                     height={22}
                                 />
-                                <span className="text-sm font-medium text-gray-700">Attach File</span>
+                                <span className="text-sm font-medium text-gray-700">
+                                    Attach File
+                                </span>
                             </div>
                         </label>
+
+                        {isUploading && (
+                            <div className="flex items-center justify-center space-x-2">
+                                <PulseLoader color={"#000000"} size={10} />
+                                <span className="text-sm font-medium text-gray-700">
+                                    Uploading...
+                                </span>
+                            </div>
+                        )}
 
                         <select
                             value={selectedLang}
@@ -156,16 +132,19 @@ const OcrPage = () => {
                             className="border border-gray-300 p-[0.70rem]"
                         >
                             <option value="eng">English</option>
-                            <option value="hin">Hindi</option>
-                            <option value="mar">Marathi</option>
-                            <option value="tam">Tamil</option>
-                            <option value="tel">Telugu</option>
-                            <option value="kan">Kannada</option>
-                            <option value="mal">Malayalam</option>
+                            <option value="asm">Assamese</option>
                             <option value="ben">Bengali</option>
                             <option value="guj">Gujarati</option>
+                            <option value="hin">Hindi</option>
+                            <option value="kan">Kannada</option>
+                            <option value="mal">Malayalam</option>
+                            <option value="mar">Marathi</option>
+                            <option value="ori">Oriya (Odia)</option>
                             <option value="pan">Punjabi</option>
-                            <option value="ori">Odia</option>
+                            <option value="san">Sanskrit</option>
+                            <option value="sin">Sinhala</option>
+                            <option value="tam">Tamil</option>
+                            <option value="tel">Telugu</option>
                             <option value="urd">Urdu</option>
                         </select>
 
@@ -178,12 +157,16 @@ const OcrPage = () => {
                         </button>
 
                         {isProcessing && (
-                            <div className="text-gray-500">Processing...</div>
+                            <div className="flex items-center justify-center space-x-2">
+                                <PulseLoader color="#000000" size={10} />
+                                <span className="text-sm font-medium text-black">
+                                    Processing...
+                                </span>
+                            </div>
                         )}
 
-                        {error && (
-                            <div className="text-red-600">{error}</div>
-                        )}
+
+                        {error && <div className="text-red-600">{error}</div>}
                     </div>
 
                     {fileName && (

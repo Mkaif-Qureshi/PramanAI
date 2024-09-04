@@ -39,16 +39,19 @@ export default function Header() {
             </div>
             <nav className="flex flex-wrap gap-4 md:gap-6 mb-2 md:mb-0 text-md">
                 <Link href="/" className="nav-item">
-                    Home
+                    HOME
                 </Link>
                 <Link href="/ocr" className="nav-item">
                     OCR
                 </Link>
-                <Link href="/services" className="nav-item">
-                    Services
+                <Link href="/translation" className="nav-item">
+                    TRANSLATION
+                </Link>
+                <Link href="/main" className="nav-item">
+                    NER
                 </Link>
                 <Link href="/about" className="nav-item">
-                    About
+                    ABOUT
                 </Link>
             </nav>
 
