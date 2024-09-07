@@ -42,7 +42,7 @@ export default function Home() {
                         { src: '/images/translator.jpg', alt: 'Superior Translation Accuracy', title: 'Superior Translation Accuracy', description: 'Achieve higher translation accuracy with AI models specially designed for Indian languages.' },
                         { src: '/images/data.jpg', alt: 'Data-Driven Insights', title: 'Data-Driven Insights', description: 'Extract actionable insights from complex data to support informed decision-making and strategic planning.' }
                     ].map((benefit, index) => (
-                        <div key={index} className="benefit bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+                        <div key={index} className="benefit bg-white p-6 shadow-md hover:shadow-xl transition-shadow duration-300 text-center ">
                             <img src={benefit.src} alt={benefit.alt} className="mx-auto mb-4 w-150 " />
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
                             <p className="text-gray-600">{benefit.description}</p>

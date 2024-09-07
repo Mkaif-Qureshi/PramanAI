@@ -35,3 +35,16 @@ header {
     transform: translateY(0); /* Move header back into view */
 }
 
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate-animation {
+    animation: rotate 10s linear infinite; /* Adjust time for slower or faster rotation */
+    transition: transform 0.2s; /* Smooth transition for stopping */
+}

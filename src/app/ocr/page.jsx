@@ -165,7 +165,6 @@ const OcrPage = () => {
                             </div>
                         )}
 
-
                         {error && <div className="text-red-600">{error}</div>}
                     </div>
 
