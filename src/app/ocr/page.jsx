@@ -121,7 +121,7 @@ const OcrPage = () => {
                                 </div>
                             )}
 
-                            <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-2">
                                 <select
                                     value={selectedLang}
                                     onChange={handleLangChange}
@@ -173,7 +173,7 @@ const OcrPage = () => {
                             {selectedFile && (
                                 <iframe
                                     src={URL.createObjectURL(selectedFile)}
-                                    className="w-full h-auto border border-gray-300"
+                                    className="w-full h-full border border-gray-300"
                                     title="Document Preview"
                                 ></iframe>
                             )}

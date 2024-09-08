@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import RecentChats from '../components/RecentChats';
 import Image from 'next/image';
 import "./styles.css";
+import axios from 'axios';
 
 const MainPage = () => {
     const [document, setDocument] = useState(null);
@@ -11,60 +12,62 @@ const MainPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [textInput, setTextInput] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [uploading, setUploading] = useState(false); // State for tracking upload progress
-    const [uploadProgress, setUploadProgress] = useState(0); // State for tracking progress percentage
-    const [loading, setLoading] = useState(false); // State for tracking text extraction loading
+    const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    // Upload file and process with NER
     const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append('file', file);
 
-        setUploading(true); // Start upload progress
+        setUploading(true);
         setUploadProgress(0);
 
         try {
-            const response = await fetch('http://localhost:5000/api/ocr', {
-                method: 'POST',
-                body: formData,
-                // Use a function to handle upload progress
-                onUploadProgress: (event) => {
-                    if (event.lengthComputable) {
-                        const progress = Math.round((event.loaded / event.total) * 100);
-                        setUploadProgress(progress);
-                    }
-                }
+            // Send file to server to extract text
+            const ocrResponse = await axios.post('http://localhost:5000/api/ocr', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                    setUploadProgress(progress);
+                },
             });
-            const data = await response.json();
-            if (response.ok) {
-                setExtractedData([data.text]);
-                setDocument(file);
-                setUploadProgress(100); // Upload complete
+
+            // Extract text using NER
+            const text = ocrResponse.data.text;
+            const nerResponse = await fetch('http://localhost:5000/api/ner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text }),
+            });
+
+            const nerData = await nerResponse.json();
+            if (nerResponse.ok) {
+                setExtractedData(nerData.entities);  // Assuming API returns NER entities in 'entities' field
             } else {
-                console.error(data.error);
+                console.error(nerData.error);
             }
+
+            setDocument(file);
+            setUploadProgress(100);
         } catch (error) {
             console.error('Error:', error);
         } finally {
-            setUploading(false); // End upload progress
+            setUploading(false);
         }
     };
 
-    const handleSearch = () => {
-        // Implement search logic here
-    };
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
-
+    // Function for NER-based text extraction
     const handleTextExtraction = async () => {
-        setLoading(true); // Start text extraction loading
+        setLoading(true);
 
         try {
             const response = await fetch('http://localhost:5000/api/ner', {
@@ -72,11 +75,12 @@ const MainPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ text: textInput }),
+                body: JSON.stringify({ text: textInput }), // Pass text for NER extraction
             });
+
             const data = await response.json();
             if (response.ok) {
-                setExtractedData(data.entities);
+                setExtractedData(data.entities);  // Assuming API returns NER entities in 'entities' field
                 handleCloseModal();
             } else {
                 console.error(data.error);
@@ -84,10 +88,9 @@ const MainPage = () => {
         } catch (error) {
             console.error('Error:', error);
         } finally {
-            setLoading(false); // End text extraction loading
+            setLoading(false);
         }
     };
-
 
     const entityColors = {
         "B-CASE_NUMBER": "#FFDDC1",
@@ -119,10 +122,8 @@ const MainPage = () => {
         "O": "#FFFFFF"
     };
 
-
     return (
         <div className="flex min-h-screen bg-light-gray">
-            {/* Main content area */}
             <main className="flex-grow p-4 sm:p-8 overflow-x-auto">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Left Section: Upload and Display */}
@@ -150,14 +151,13 @@ const MainPage = () => {
                             <span>-Or-</span>
 
                             <button
-                                onClick={handleOpenModal}
+                                onClick={() => setIsModalOpen(true)}
                                 className="inline-block text-gray-700 px-4 py-2 border border-gray-300 bg-white font-semibold"
                             >
                                 <span className="relative">Extract from Text</span>
                             </button>
                         </div>
 
-                        {/* Display Upload Progress */}
                         {uploading && (
                             <div className="mt-4">
                                 <p className="text-sm font-semibold text-gray-700 mb-2">Uploading: {uploadProgress}%</p>
@@ -170,7 +170,6 @@ const MainPage = () => {
                             </div>
                         )}
 
-                        {/* Display Uploaded File */}
                         <div className="mt-4">
                             {document && (
                                 <div>
@@ -186,7 +185,6 @@ const MainPage = () => {
                     {/* Right Section: Output and Query */}
                     <section className="w-full sm:w-1/2 p-4 bg-white">
                         <h2 className="text-lg font-bold mb-4">Query and Extracted Data</h2>
-                        {/* Extracted Data */}
                         <div className="bg-white p-4 shadow-md border border-gray-300 overflow-x-auto">
                             <h2 className="text-lg font-semibold mb-4">Extracted Data</h2>
                             <hr className="border-gray-300 mb-4" />
@@ -215,7 +213,6 @@ const MainPage = () => {
                         </div>
 
                         <div className="flex space-x-4 my-4">
-                            {/* Query input box */}
                             <input
                                 type="text"
                                 placeholder="Enter your query..."
@@ -224,12 +221,11 @@ const MainPage = () => {
                                 className="border p-2 flex-grow border-gray-300 focus:ring-1 focus:ring-black"
                             />
 
-                            {/* Search button */}
                             <button
-                                onClick={handleSearch}
+                                onClick={() => console.log(searchQuery)} // You can update the search functionality
                                 className="inline-block text-gray-800 px-4 py-2 border border-gray-300 bg-white font-semibold"
                             >
-                                <span className="relative">Enter</span>
+                                Enter
                             </button>
                         </div>
                     </section>
@@ -239,47 +235,49 @@ const MainPage = () => {
                 {isModalOpen && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
                         <div className="relative bg-white p-4 rounded-md shadow-lg w-full max-w-lg">
-                            {/* Close Icon */}
                             <button
-                                onClick={handleCloseModal}
+                                onClick={() => setIsModalOpen(false)}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                                 aria-label="Close"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-6 w-6"
-                                    viewBox="0 0 24 24"
                                     fill="none"
+                                    viewBox="0 0 24 24"
                                     stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
                                 >
-                                    <path d="M6 18L18 6M6 6l12 12" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
                                 </svg>
                             </button>
 
-                            <h2 className="text-lg font-bold mb-4">Text Extraction</h2>
+                            <h2 className="text-lg font-bold mb-4">Extract Entities from Text</h2>
                             <textarea
+                                className="w-full border border-gray-300 p-2 mb-4"
+                                rows="6"
                                 value={textInput}
                                 onChange={(e) => setTextInput(e.target.value)}
-                                placeholder="Enter text for extraction..."
-                                rows="5"
-                                className="border border-gray-300 p-2 w-full mb-4"
+                                placeholder="Paste or type text here for extraction..."
                             />
-                            <div className="flex justify-between">
-                                <button
-                                    onClick={handleTextExtraction}
-                                    className="inline-block text-gray-800 px-4 py-2 border border-gray-300 bg-white font-semibold"
-                                >
-                                    {loading ? 'Processing...' : 'Extract'}
-                                </button>
-                            </div>
+
+                            <button
+                                onClick={handleTextExtraction}
+                                disabled={loading}
+                                className="inline-block w-full text-gray-800 px-4 py-2 border border-gray-300 bg-white font-semibold"
+                            >
+                                {loading ? "Extracting..." : "Extract Entities"}
+                            </button>
                         </div>
                     </div>
                 )}
-
             </main>
+
+
         </div>
     );
 };
