@@ -234,7 +234,7 @@ const MainPage = () => {
                 {/* Modal for text extraction */}
                 {isModalOpen && (
                     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-                        <div className="relative bg-white p-4 rounded-md shadow-lg w-full max-w-lg">
+                        <div className="relative bg-white p-4 shadow-lg w-full max-w-lg">
                             <button
                                 onClick={() => setIsModalOpen(false)}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
