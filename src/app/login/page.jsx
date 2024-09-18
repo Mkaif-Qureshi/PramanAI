@@ -26,11 +26,14 @@ const LoginPage = () => {
             const data = await response.json();
 
             if (response.ok) {
+                // Save JWT token in localStorage
+                localStorage.setItem('token', data.token);
+
                 toast.success('Login successful!', {
                     position: "bottom-right"
                 });
                 setTimeout(() => {
-                    router.push('/main');
+                    router.push('/main');  // Redirect to the main page
                 }, 1500);
             } else {
                 toast.error(data.message || 'Login failed.', {
@@ -44,6 +47,7 @@ const LoginPage = () => {
             });
         }
     };
+
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-light-gray">
