@@ -1,7 +1,6 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import RecentChats from '../components/RecentChats';
 import Image from 'next/image';
 import "./styles.css";
 import axios from 'axios';
@@ -16,6 +15,35 @@ const MainPage = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    const [chatHistory, setChatHistory] = useState([]);
+    const [chatInput, setChatInput] = useState('');
+
+    const handleSendMessage = async () => {
+        if (!chatInput) return;
+
+        // Update the chat history with the user's question
+        const newChatHistory = [...chatHistory, { sender: 'user', text: chatInput }];
+        setChatHistory(newChatHistory);
+
+        try {
+            // Send the user's question to the backend
+            const response = await axios.post('http://localhost:5000/api/chat', {
+                query: chatInput,
+                documentText: extractedData,  // Pass the extracted document data
+            });
+
+            // Append the response from the server to the chat history
+            const serverResponse = response.data.answer;
+            setChatHistory([...newChatHistory, { sender: 'bot', text: serverResponse }]);
+
+            setChatInput('');  // Clear input after sending
+        } catch (error) {
+            console.error('Error in chat interaction:', error);
+            setChatHistory([...newChatHistory, { sender: 'bot', text: 'Error processing your query.' }]);
+        }
+    };
+
 
     // Upload file and process with NER
     const handleFileUpload = async (event) => {
@@ -212,23 +240,41 @@ const MainPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex space-x-4 my-4">
-                            <input
-                                type="text"
-                                placeholder="Enter your query..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="border p-2 flex-grow border-gray-300 focus:ring-1 focus:ring-black"
-                            />
+                        <section className="w-full bg-white mt-3">
+                            <h2 className="text-lg font-bold mb-4">Chat with Document</h2>
 
-                            <button
-                                onClick={() => console.log(searchQuery)} // You can update the search functionality
-                                className="inline-block text-gray-800 px-4 py-2 border border-gray-300 bg-white font-semibold"
-                            >
-                                Enter
-                            </button>
-                        </div>
+                            <div className="chatbox-container p-4 border border-gray-300 rounded-lg bg-white shadow-md">
+                                <div className="chat-history mb-4 h-60 overflow-y-auto p-2 border border-gray-200">
+                                    {/* Render chat history here */}
+                                    {chatHistory.map((message, index) => (
+                                        <div key={index} className={`chat-message ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                                            <span className={`message ${message.sender === 'user' ? 'bg-blue-100' : 'bg-gray-200'} inline-block p-2 rounded-lg`}>
+                                                {message.text}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="chat-input flex">
+                                    <input
+                                        type="text"
+                                        className="flex-grow border p-2"
+                                        value={chatInput}
+                                        onChange={(e) => setChatInput(e.target.value)}
+                                        placeholder="Ask a question..."
+                                    />
+                                    <button
+                                        className="bg-blue-500 text-white px-4 py-2 ml-2"
+                                        onClick={handleSendMessage}
+                                        disabled={!chatInput}
+                                    >
+                                        Send
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
                     </section>
+
                 </div>
 
                 {/* Modal for text extraction */}

@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { Bodoni_Moda } from "next/font/google";
+const bodoni = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
 const footerData = [
     {
@@ -27,20 +29,9 @@ const footerData = [
 
 const Footer = () => {
     const pathname = usePathname();
-    const excludedRoutes = [
-        '/liveroom',
-        '/virtualexperience',
-        '/freedesign',
-        '/freesample',
-    ];
-
-    if (excludedRoutes.includes(pathname)) {
-        return null;
-    }
 
     return (
-        <footer className="bg-light-gray lg:px-[67px] sm:px-[50px] px-[20px] py-10 mt-20 border-t">
-            <LogoSection />
+        <footer className="bg-light-gray lg:px-[67px] sm:px-[50px] px-[20px] py-10 pt-20 border-t">
             <FooterContent />
             <BottomSection />
         </footer>
@@ -48,7 +39,7 @@ const Footer = () => {
 };
 
 const LogoSection = () => (
-    <div className="flex justify-center mb-8">
+    <div className="flex justify-center mb-2">
         <div className="logo font-bold text-xl md:text-2xl mb-2 md:mb-0 flex items-center">
             <Image
                 src="/images/pramanai_logo.svg"
@@ -63,10 +54,11 @@ const LogoSection = () => (
 
 const FooterContent = () => (
     <div className="grid md:grid-cols-4 grid-cols-1 gap-10">
-        <div className="md:col-span-1">
-            <h2 className="text-xl font-semibold mb-4">Join the PramanAI Family</h2>
-            <p>Sign up for our newsletter to stay updated.</p>
-            {/* Optionally, add a newsletter subscription form here */}
+        <div className="flex-row md:col-span-1">
+            <LogoSection />
+            <div className='flex items-center justify-center'>
+                <h2 className={`text-2xl ${bodoni.className} `}>PramanAI</h2>
+            </div>
         </div>
         {footerData.map((column) => (
             <div key={column.id}>

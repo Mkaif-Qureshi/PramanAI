@@ -5,10 +5,12 @@ import "./Header.css";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Bodoni_Moda } from "next/font/google";
+const bodoni = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
 import { useRouter } from 'next/navigation';
 
-export default function Header() {  
+export default function Header() {
     const [scrollDirection, setScrollDirection] = useState("scrolled-up");
     const [lastScrollY, setLastScrollY] = useState(0);
     const [scrollTimeout, setScrollTimeout] = useState(null);
@@ -67,7 +69,7 @@ export default function Header() {
                     height={45}
                     className="rounded-full object-fit mr-2 rotate-animation" // Add the rotate-animation class
                 />
-                <Link href="/">PramanAI</Link>
+                <Link href="/" className={`text-2xl ${bodoni.className}`}>PramanAI</Link>
             </div>
 
             <nav className="flex flex-wrap gap-4 md:gap-6 mb-2 md:mb-0 text-md">
